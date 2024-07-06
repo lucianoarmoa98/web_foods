@@ -2,7 +2,7 @@
   "name": "web_foods",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://incentivagroups.com/",
+  "homepage": "https://incentivagroups.foundation",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -25,6 +25,8 @@
     "react-router-dom": "^6.22.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
