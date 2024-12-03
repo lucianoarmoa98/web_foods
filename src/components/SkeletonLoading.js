@@ -13,10 +13,10 @@ export default function SkeletonLoading() {
                 flexDirection: 'column',
                 gap: '10px',
             }}>
-                <Skeleton variant="rounded" width={'20%'} height={40} />
-                <Skeleton variant="rounded" width={'70%'} height={60} />
-                <Skeleton variant="rounded" width={'70%'} height={60} />
-                <Skeleton variant="rounded" width={'70%'} height={60} />
+                <Skeleton variant="rounded" width={'100%'} height={100} />
+                <Skeleton variant="rounded" width={'100%'} height={100} />
+                <Skeleton variant="rounded" width={'100%'} height={100} />
+                <Skeleton variant="rounded" width={'100%'} height={100} />
             </Box>
         </Stack>
     );

@@ -1,6 +1,7 @@
 import { Backdrop, TextField, Typography, styled } from "@mui/material";
 // import fontTitle from '../../src/assets/fonts/Poppins-Regular.ttf';
 import { brown } from "@mui/material/colors";
+import { COLOR_INITIAL } from "./StylesConstantes";
 
 export const COLOR_BACKGROUND_VERDER_AGUA = '#48c590';
 export const COLOR_BACKGROUND_BLANCO = "#ffffff";
@@ -39,11 +40,11 @@ export const CssTextField = styled(TextField)({
     '& .MuiOutlinedInput-root': {
         "&.Mui-focused fieldset": {
             // borderColor: brown[600],
-            borderColor: COLOR_BACKGROUND_VERDER_AGUA,
+            borderColor: COLOR_INITIAL.NEGRO,
         },
         '&:hover fieldset': {
             // borderColor: brown[600],
-            borderColor: COLOR_BACKGROUND_VERDER_AGUA,
+            borderColor: COLOR_INITIAL.NEGRO,
         },
     },
     //agregar color al label
@@ -51,6 +52,7 @@ export const CssTextField = styled(TextField)({
         color: COLOR_BACKGROUND_GRIS_OSCURO,
     },
 });
+
 
 //--------------------------------------estilo de Backdrop
 export const BackdropStyle = styled(Backdrop)(({ theme }) => ({

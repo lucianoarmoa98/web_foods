@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Box, Button, Container, Typography, useMediaQuery } from "@mui/material";
-import { postProductosCategoria } from "../api/ApiService";
 import { useNavigate } from "react-router-dom";
 import SkeletonLoading from "./SkeletonLoading";
 import '../index.css';
@@ -8,18 +7,13 @@ import { COLOR_INITIAL } from "../styles/StylesConstantes";
 
 
 
-function CardMenu({ data, title, busqueda }) {
-    const [dataHome, setDataHome] = useState([]);
-    const [cargando, setCargando] = useState(false);
+function CardMenuSearch({ data, title, cargando }) {
 
     const matchesMobile = useMediaQuery('(min-width:1200px)');
 
     let history = useNavigate();
 
-    useEffect(() => {
-        handleListarProductos();
-    }, []);
-    
+
 
     //funcion para recortar el texto, si es muy largo
     const recortarTexto = (texto, size) => {
@@ -30,33 +24,6 @@ function CardMenu({ data, title, busqueda }) {
         }
     };
 
-
-
-    const handleListarProductos = () => {
-        let body = {
-            categoria: busqueda
-        };
-
-        postProductosCategoria(body, 1, 3)
-            .then((response) => {
-                // console.log("response-postProductosCategoria", response);
-                if (response.body.length > 0) {
-                    setDataHome(response.body);
-                    setCargando(true);
-                } else {
-                    setDataHome([]);
-                    setCargando(true);
-                }
-
-
-            })
-            .catch((error) => {
-                setDataHome([]);
-                setCargando(true);
-                console.log("error-postProductosCategoria", error);
-            });
-    };
-
     const handelVerMas = (item) => {
         // console.log('item', item);
         history(`/app/menu-detalle/${item.id}`, { state: item });
@@ -65,7 +32,7 @@ function CardMenu({ data, title, busqueda }) {
     return (
         <Box sx={{}}>
             {!matchesMobile ?
-                <Box sx={{}}>
+                <Box sx={{ marginBottom: 20 }}>
                     {cargando ? (
                         <div>
                             <Container sx={{}} style={{}}>
@@ -80,8 +47,8 @@ function CardMenu({ data, title, busqueda }) {
                                 scrollbarWidth: 'none', // Para Firefox
                                 WebkitOverflowScrolling: 'touch' // Para iOS
                             }} className="no-scrollbar">
-                                
-                                {dataHome.map((option, index) => (
+
+                                {data.length > 0 ? data.map((option, index) => (
                                     <div key={option.id} style={{
                                         border: '1px solid #ccc',
                                         borderRadius: 20,
@@ -131,7 +98,19 @@ function CardMenu({ data, title, busqueda }) {
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: 200,
+                                        width: '100%',
+                                    }}>
+                                        <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                            No hay resultados
+                                        </Typography>
+                                    </div>
+                                )}
                             </div>
 
                         </div>
@@ -140,16 +119,17 @@ function CardMenu({ data, title, busqueda }) {
                             <SkeletonLoading />
                         </Container>
                     )}
+
+
+
                 </Box>
                 :
-                <Box sx={{}}>
+                <Box sx={{ marginBottom: 20 }}>
                     {cargando ? (
                         <Container sx={{}} style={{}}>
-                            {dataHome.length > 0 &&
-                                <Typography variant="h3" style={{ fontWeight: 'bold' }}>
-                                    {title}
-                                </Typography>
-                            }
+                            <Typography variant="h3" style={{ fontWeight: 'bold' }}>
+                                {title}
+                            </Typography>
 
                             <div style={{
                                 display: 'flex',
@@ -157,7 +137,7 @@ function CardMenu({ data, title, busqueda }) {
                                 // justifyContent: 'center',
                             }}>
 
-                                {dataHome.map((option, index) => (
+                                {data.length > 0 ? data.map((option, index) => (
                                     <div key={option.id} style={{
                                         // display: 'flex',
                                         // flexDirection: 'column',
@@ -218,7 +198,19 @@ function CardMenu({ data, title, busqueda }) {
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                )) : (
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: 200,
+                                        width: '100%',
+                                    }}>
+                                        <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                            No hay resultados
+                                        </Typography>
+                                    </div>
+                                )}
                             </div>
                         </Container>
                     ) : (
@@ -232,4 +224,4 @@ function CardMenu({ data, title, busqueda }) {
     );
 }
 
-export default CardMenu;
+export default CardMenuSearch;

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, IconButton, ListItemText, ListItemIcon, ListItem, List, Divider, Drawer, useTheme, useMediaQuery, Tabs, Tab, Button, Avatar, Box, styled, CssBaseline, Badge, Typography } from '@mui/material';
-import { AccountCircle, Add, Brightness4, CardGiftcard, ChevronLeft, ChevronRight, DarkMode, Home, HomeOutlined, Payment, Person, Phone, ShoppingCart, ShoppingCartCheckout, WhatsApp, } from '@mui/icons-material';
+import { AppBar, Toolbar, IconButton, ListItemText, ListItemIcon, ListItem, List, Divider, Drawer, useTheme, useMediaQuery, Button, Box, styled, CssBaseline, Badge, Typography, ListItemButton } from '@mui/material';
+import { HomeOutlined, Person, Phone, ShoppingCart, ShoppingCartCheckout, ViewCarouselOutlined, WhatsApp, Menu, LoginOutlined, FastfoodOutlined } from '@mui/icons-material';
 import { useNavigate } from "react-router-dom";
-import { COLOR_BACKGROUND_VERDER_AGUA, COLOR_BACKGROUND_VERDE_CLARO, DrawerHeader, ICON_COLOR_BLACK, TEXT_HEADER } from '../styles/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import logo from '../assets/empresas/logo.jpg';
 import Footers from './Footers';
-import { setNumberOrders, setTabPosition, setToken } from '../redux/actions/action';
+import { setNumberOrders, setToken } from '../redux/actions/action';
 import { Helmet } from 'react-helmet';
 import { COLOR_INITIAL } from '../styles/StylesConstantes';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 const drawerWidth = 240;
 
@@ -35,7 +36,7 @@ function HeaderCustom({ children, id }) {
     const [open, setOpen] = useState(false);
 
     const stateOrderNumber = useSelector(state => state.reducerGlobal.numberOrders);
-
+    const stateToken = useSelector(state => state.reducerGlobal.token);
 
     const theme = useTheme();
     const isMatch = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,7 +45,6 @@ function HeaderCustom({ children, id }) {
     let location = window.location.pathname;
     const dispatch = useDispatch();
 
-    let dataAdmin = localStorage.getItem('dataUser');
 
     useEffect(() => {
         //obtener el numero de ordenes del localstorage
@@ -88,12 +88,16 @@ function HeaderCustom({ children, id }) {
         history('/');
     }
 
-    const handleServicios = () => {
-        history('/app/servicios');
+    const handleBanners = () => {
+        history('/app/admin/banners');
     }
 
     const handleContacto = () => {
         history('/app/contacto');
+    };
+
+    const handleProductos = () => {
+        history('/app/admin/productos');
     }
 
     const handleCarrito = () => {
@@ -126,15 +130,6 @@ function HeaderCustom({ children, id }) {
     };
 
 
-    //-----------------------------abrir el menu de navegacion
-    const handleDrawerOpen = () => {
-        // setOpen(true)
-        if (open) {
-            handleDrawerClose();
-        } else {
-            setOpen(true);
-        }
-    };
 
     //-----------------------------cerrar el menu
     const handleDrawerClose = () => {
@@ -148,33 +143,53 @@ function HeaderCustom({ children, id }) {
         {
             id: 1,
             name: 'Inicio',
-            icon: <HomeOutlined style={{ color: COLOR_INITIAL.COLOR_AMARILLO }} />,
+            icon: <HomeOutlined style={{ color: COLOR_INITIAL.NEGRO }} />,
             action: handleHome
         },
         {
             id: 2,
-            name: 'Productos',
-            icon: <ShoppingCart style={{ color: COLOR_INITIAL.COLOR_AMARILLO }} />,
-            action: handleServicios
+            name: 'Banners',
+            icon: <ViewCarouselOutlined style={{ color: COLOR_INITIAL.NEGRO }} />,
+            action: handleBanners
         },
         {
             id: 3,
-            name: 'Sobre Nosotros',
-            icon: <Person style={{ color: COLOR_INITIAL.COLOR_AMARILLO }} />,
-            action: handleContacto
+            name: 'Productos',
+            icon: <FastfoodOutlined style={{ color: COLOR_INITIAL.NEGRO }} />,
+            action: handleProductos
         },
         {
             id: 4,
-            name: 'Contacto',
-            icon: <Phone style={{ color: COLOR_INITIAL.COLOR_AMARILLO }} />,
-            action: handleContacto
+            name: 'Cerrar Sesion',
+            icon: <LoginOutlined style={{ color: COLOR_INITIAL.NEGRO }} />,
+            action: handleClose
         },
     ]
 
-    //funcion para identificar si esta dentro de un dispositivo movil
-    const isMobile = () => {
-        return isMatch;
-    }
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
+    };
+
+
+    const DrawerList = (
+        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+            <List>
+                {arrayMenu.map((item, index) => (
+                    <ListItem key={index} disablePadding onClick={item.action}>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {item.icon}
+                            </ListItemIcon>
+                            <ListItemText primary={item.name} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
+
+
 
     return (
         <div style={{}}>
@@ -197,12 +212,8 @@ function HeaderCustom({ children, id }) {
             </Helmet>
             <CssBaseline />
 
-            {/* <AppBar position="fixed" style={{
-                backgroundColor: 'white',
-            }}> */}
-            <div style={{
-                // backgroundColor: '#f8f9fa',
-            }}>
+
+            <div style={{}}>
                 <Toolbar style={{
                     // backgroundColor: COLOR_INITIAL.HEADER_COLOR,
                     backgroundColor: 'transparent',
@@ -239,7 +250,6 @@ function HeaderCustom({ children, id }) {
                                             color: COLOR_INITIAL.HEADER_COLOR,
                                             fontSize: 20,
                                         }}
-                                        onClick={handleDrawerOpen}
                                     />
                                     <Typography variant="caption" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 5, }}>
                                         Limpio - Defensores del Chaco
@@ -256,17 +266,12 @@ function HeaderCustom({ children, id }) {
                                             color: COLOR_INITIAL.HEADER_COLOR,
                                             fontSize: 20,
                                         }}
-                                        onClick={handleDrawerOpen}
                                     />
                                     <Typography variant="caption" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 5, }}>
                                         0981 123 456
                                     </Typography>
                                 </div>
                             </div>
-
-
-
-
                         </div>
                     ) : (
 
@@ -299,29 +304,50 @@ function HeaderCustom({ children, id }) {
                                 </Box>
 
 
-                                <Box sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                }}>
-                                    <Button color="success" style={{ color: COLOR_INITIAL.HEADER_COLOR }}>
-                                        Inicio
-                                    </Button>
+                                {stateToken ? (
+                                    <Box sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            marginRight: 20,
 
-                                    <Button color="success" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 40 }}>
-                                        Productos
-                                    </Button>
+                                        }}>
+                                            <Typography variant="caption" style={{ color: COLOR_INITIAL.HEADER_COLOR, }}>
+                                                {stateToken?.body?.usuario}
+                                            </Typography>
+                                            <Typography variant="caption" style={{ color: COLOR_INITIAL.HEADER_COLOR, }}>
+                                                {stateToken?.body?.correo}
+                                            </Typography>
+                                        </div>
 
-                                    <Button color="inherit" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 40 }}>
-                                        Sobre Nosotros
-                                    </Button>
+                                        <Button onClick={toggleDrawer(true)} color="success" style={{ color: COLOR_INITIAL.HEADER_COLOR }}>
+                                            <Menu />
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Box sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                    }}>
+                                        <Button onClick={handleHome} color="success" style={{ color: COLOR_INITIAL.HEADER_COLOR }}>
+                                            Inicio
+                                        </Button>
 
-                                    <Button color="inherit" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 40 }}>
-                                        Contacto
-                                    </Button>
+                                        <Button color="inherit" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 40 }}>
+                                            Sobre Nosotros
+                                        </Button>
 
-
-                                </Box>
+                                        <Button onClick={handleContacto} color="inherit" style={{ color: COLOR_INITIAL.HEADER_COLOR, marginLeft: 40 }}>
+                                            Contacto
+                                        </Button>
+                                    </Box>
+                                )}
 
                             </Box>
                         </div>
@@ -330,15 +356,21 @@ function HeaderCustom({ children, id }) {
             </div>
 
             <Main open={open} onClick={handleDrawerClose}>
-                {/* <DrawerHeader /> */}
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
-                    height: '100%',
+                    height: '100vh',
                 }}>
-                    {children}
+                    <Drawer open={open} onClose={toggleDrawer(false)}>
+                        {DrawerList}
+                    </Drawer>
+
+                    <div style={{ flex: 1 }}>
+                        {children}
+                    </div>
+
+                    <Footers handlePhoneWhatsApp={handlePhoneWhatsApp} />
                 </div>
-                {/* <Footers handlePhoneWhatsApp={handlePhoneWhatsApp} /> */}
             </Main>
         </div>
     );

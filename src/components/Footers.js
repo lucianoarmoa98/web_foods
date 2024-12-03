@@ -10,7 +10,7 @@ const Footers = ({ handlePhoneWhatsApp }) => {
     const mobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <div>
+        <div style={{ marginTop: 'auto' }}>
             {mobile ? <FootersMobile /> : <FootersWeb handlePhoneWhatsApp={handlePhoneWhatsApp} />}
         </div>
     );
